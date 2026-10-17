@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <title>Netlify Functions テスト</title>
 </head>
+
 <body>
-    <h1>Netlify Functions 呼び出しテスト(POST版)</h1>
-    
+    <h1>Netlify Functions 呼び出しテスト</h1>
+
     <input type="text" id="nameInput" placeholder="お名前を入力してください">
     <button id="callButton">APIを呼ぶ</button>
-    
+
     <div id="result" style="margin-top: 20px; padding: 10px; background: #f0f0f0;">
         ここに結果が表示されます
     </div>
 
-<script>
+    <script>
         document.getElementById('callButton').addEventListener('click', async () => {
             const name = document.getElementById('nameInput').value;
             const resultDiv = document.getElementById('result');
@@ -28,15 +30,15 @@
                         'Content-Type': 'application/json' // JSONを送ることをサーバーに伝える
                     },
                     // nameをJSON形式の文字列に変換してボディに入れる
-                    body: JSON.stringify({ name: name }) 
+                    body: JSON.stringify({ name: name })
                 });
-                
+
                 if (!response.ok) {
                     throw new Error('サーバーエラーが発生しました');
                 }
 
                 const data = await response.json();
-                
+
                 // 画面に結果を表示
                 resultDiv.innerHTML = `
                     <p style="color: green; margin: 0;"><strong>成功！</strong></p>
@@ -49,4 +51,5 @@
         });
     </script>
 </body>
+
 </html>
