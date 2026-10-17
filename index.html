@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Netlify Functions テスト</title>
+</head>
+<body>
+    <h1>Netlify Functions 呼び出しテスト</h1>
+    
+    <input type="text" id="nameInput" placeholder="お名前を入力してください">
+    <button id="callButton">APIを呼ぶ</button>
+    
+    <div id="result" style="margin-top: 20px; padding: 10px; background: #f0f0f0;">
+        ここに結果が表示されます
+    </div>
+
+<script>
+        document.getElementById('callButton').addEventListener('click', async () => {
+            const name = document.getElementById('nameInput').value;
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = '通信中...';
+
+            try {
+                // POSTリクエストとして送信
+                const response = await fetch('/.netlify/functions/hello', {
+                    method: 'POST', // ここでPOSTを指定
+                    headers: {
+                        'Content-Type': 'application/json' // JSONを送ることをサーバーに伝える
+                    },
+                    // nameをJSON形式の文字列に変換してボディに入れる
+                    body: JSON.stringify({ name: name }) 
+                });
+                
+                if (!response.ok) {
+                    throw new Error('サーバーエラーが発生しました');
+                }
+
+                const data = await response.json();
+                
+                // 画面に結果を表示
+                resultDiv.innerHTML = `
+                    <p style="color: green; margin: 0;"><strong>成功！</strong></p>
+                    <p style="margin: 5px 0 0 0;">メッセージ: ${data.message}</p>
+                    <p style="margin: 5px 0 0 0; font-size: 0.9em; color: #666;">サーバー時刻: ${data.time}</p>
+                `;
+            } catch (error) {
+                resultDiv.textContent = `エラー: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+</html>
